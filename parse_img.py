@@ -1,6 +1,6 @@
 file_path = "templates/"
 file_name_postfix = ".html"
-files = ["catalog", "home", "index", "product"]
+files = ["template"]
 need_find = "\"img/"
 need_find2 = "\"img/"
 replace = "\"static/img/"
