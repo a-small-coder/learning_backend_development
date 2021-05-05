@@ -1,18 +1,2 @@
 #' Lines starting with '#' are considered comments.
-'#' Ignore any file named foo.txt.
-foo.txt
-'#' Ignore (generated) [oa] files,
-*.[oa]
-'#' for except file use ! .
-
-'#' Ignore objects and archives.
-
-*.[oa]
-
-.idea/
-
-.target/
-
-.out/
-
 README.md

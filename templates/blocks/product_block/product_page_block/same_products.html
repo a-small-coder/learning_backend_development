@@ -1,0 +1,52 @@
+<section class="product__same same-products">
+		<h2 class="same-products__title">Похожие товары</h2>
+		<div class="same-products__items items-products">
+			{% for same_product_item in range(3) %}
+			<div class="items-products__column">
+				<div class="item-product">
+					<div class="item-product__labels">
+					</div>
+					<a href="/product" class="item-product__image">
+						<picture><source srcset="static/img/products/02.webp" type="image/webp"><img src="static/img/products/02.jpg" alt="Тенисный стол. Зеленый."></picture>
+					</a>
+					<div class="item-product__body">
+						<a href="/product" class="item-product__title">
+							<span>BH Fitness F1 G6414V BH Fitness F1 G6414V</span>
+							Беговая дорожка
+						</a>
+						<div class="item-product__footer">
+							<a href="/product" class="item-product__add"></a>
+							<div class="item-product__price rub">64 990</div>
+						</div>
+					</div>
+					<div class="item-product__hover hover-item-product">
+						<a href="/product" class="hover-item-product__title">
+							<span>BH Fitness F1 G6414V</span>Беговая дорожка
+						</a>
+						<div class="hover-item-product__options options-item-product">
+							<div class="options-item-product__item">
+								<div class="options-item-product__label">Тип беговой дорожки: </div>
+								<div class="options-item-product__value">Электрическая</div>
+							</div>
+							<div class="options-item-product__item">
+								<div class="options-item-product__label">Скорость движения (км/ч): </div>
+								<div class="options-item-product__value">22</div>
+							</div>
+							<div class="options-item-product__item">
+								<div class="options-item-product__label">Складывание:</div>
+								<div class="options-item-product__value">Есть</div>
+							</div>
+						</div>
+						<div class="hover-item-product__body">
+							<a href="" class="hover-item-product__compare"><span>Сравнить</span></a>
+						</div>
+						<div class="hover-item-product__footer">
+							<a href="" class="hover-item-product__cart hover-item-product__cart_catalog"></a>
+							<div class="hover-item-product__price rub">64 990</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</section>
