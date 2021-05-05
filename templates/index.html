@@ -1,13 +1,236 @@
-{% extends "template.html" %}
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+	<title>Название магазина</title>
+</head>
+<body>
 
-{% block title %}
-Главная
-{% endblock %}
+	<header>
+		<div class="conteiner">
+			<div class="top_title">
+				<div class="logo_wrap">
+					<div class="logos"></div> 
+					<h1>название магазина</h1></div>
+				<ul class="menu">
+					<li>
+						<a href="#galery">Продукция</a>
+						<a href="#">Наш магазин</a>
+						<a href="#about-us">О нас</a>
+						<a href="#contacts">Контакты</a>
+						<div class="menu_search"></div>	
+					</li>						
+				</ul>
+			</div>
+			<div class="background"></div>
+			<div class="header_text">
+				<h2>Цветочный магазин</h2>
+				<h1>Название магазина - всегда свежие цветы</h1>
+				<p>Дарите любимым цветы, да просто так, а мы вам в этом поможем.<br>
+					Мы вкладываем душу в каждую композицию, потому что действительно любим своё дело.
+				</p>
+			</div>	
+			<a class="button" style="padding: 20px;"><strong>Наш магазин</strong></a>
+		</div>
+	</header> 
 
-{% block page_content %}
-{% include "blocks/index_block/index_page.html" %}
-{% endblock %}
+	<section>
+		<div class="conteiner" id="next">
 
-{% block description %}
-{% include "blocks/index_block/index_description.html" %}
-{% endblock %}
+			<div class="conteiner_content">
+				<div class="conteiner_content__tulips"></div>
+				<h4>Тюльпаны</h4>
+				<p> У нас имеется большой ассортимент тюльпанов разных сортов, собранных в оригинальные и красивейшие букеты. Впечатление от подарка у получившего такой букет, останется надолго.</p>
+				<div class="conteiner_content__selector"></div>
+			</div>
+
+  			<div class="conteiner_content">
+  				<div class="conteiner_content__rose"></div>
+				<h4>Розы</h4>
+				<p> Наши специалисты помогут правильно подобрать сочетание оттенков под вашу идею. А красивейший букет роз, купленный у нас, долго будет напоминать о важном дне жизни.</p>
+				<div class="conteiner_content__selector"></div>
+  			</div>
+
+			<div class="conteiner_content">
+				<div class="conteiner_content__home-flowers"></div>
+				<h4>Комнатные растения</h4>
+				<p>Декоративные растения для дома и офиса, поможем сделать выбор, отлично подходящий под любой дизайн и интерьер.</p>
+				<div class="conteiner_content__selector"></div>
+			</div>					
+		</div>
+	</section>
+
+	<section class="other-color">
+		<div class="conteiner">
+			<div class="conteiner_text">
+				<h3>Букеты любой  сложности для вас!</h3>
+				<p>Каждые два дня нам привозят свежие цветы, поэтому наши букеты вседа благоухают. У нас вы можете выбрать букеты на любой вскус или оформить индивидуальный заказ. Наши мастера способны  воплотить в жизнь все самые смелые ваши идеи.</p>
+			</div>
+			<div class="conteiner_image">
+				<div class="conteiner_image__left"></div>
+				<div class="conteiner_image__center"></div>
+				<div class="conteiner_image__right"></div>
+			</div>												
+		</div>
+		<div class="content-bottom">
+			<div class="content-bottom_inside">
+				<div class="content-bottom_inside__text">
+					<h4><strong>Название магазина</strong>, заинтересовали вас? - жми на кнопку!</h4>
+					<p>Познакомиться лучше с нашей продукцией можно на главном сайте</p>
+				</div>
+				<div class="content-bottom_inside__button"><strong>Наш магазин</strong></div>
+			</div>
+		</div>
+	</section>
+		
+	<section id="galery">
+		<div class="conteiner">
+			<div class="conteiner_text">
+				<h3>Наша галерея</h3>
+				<p>Предлагаем познакомиться с нашей продукцией. У нас вы можете выбрать букеты на любой вскус или оформить индивидуальный заказ. </p>
+				<ul class="conteiner_text__menu">
+					<li>
+						<a href="#">Все работы</a>
+						<a href="#">Букеты</a>
+						<a href="#">Цветы</a>
+						<a href="#">Индивидуальные заказы</a>
+					</li>
+				</ul>
+			</div>
+			<div class="conteiner_library">
+
+				<div class="conteiner_library__top">
+
+					<div class="top_block__left">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Композиция "Доброе утро"</h4>
+								<p>Более 100 заказов</p>
+							</div>
+						</div>
+					</div>
+					<div class="top_block__center">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Цветок "Глаз Ориона"</h4>
+								<p>Экслюзив, количество ограничено</p>
+							</div>
+						</div>
+					</div>
+					<div class="top_block__right">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Букет "Мгновения весны"</h4>
+								<p>Более 250 заказов</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="conteiner_library__bottom">
+
+					<div class="bottom_block__left">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Букет "Светлая мечта"</h4>
+								<p>Сделайте мечту реальной</p>
+							</div>
+						</div>
+					</div>
+					<div class="bottom_block__center">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Букет "Осенний ветер"</h4>
+								<p>Новинка</p>
+							</div>
+						</div>	
+					</div>
+					<div class="bottom_block__right">
+						<div class="conteiner_library__comments">
+							<div class="arrow"></div>
+							<div class="block__footer">
+								<h4>Композиция "Золотой рай"</h4>
+								<p>Редкие желтые розы</p>
+							</div>
+						</div>	
+					</div>	
+				</div>
+				<div class="button"><strong>Наш магазин</strong></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="other-color" id="about-us">
+		<div class="conteiner">
+			<div class="conteiner__iPhone-in-hand"></div>
+			<div class="conteiner__text-right">
+				<h4>Почему именно мы</h4>
+				<p>Мы уже более 2 лет помогаем дарить людям улыбки и радость. Каждые два дня нам привозят свежие цветы, поэтому наши букеты вседа благоухают. У нас вы можете выбрать букеты на любой вскус или оформить индивидуальный заказ. Доставка не более 2 дней по Москве и облати.</p>
+				<ul class="conteiner__text-right_list">
+					<li>Индивидуальный подход к каждому клиенту</li>
+					<li>Наши специалисты - мастера своего дела с большим опытом работы</li>
+					<li>Каждые два дня нам привозят свежие цветы, поэтому наши букеты вседа благоухают.</li>
+					<li> Мы способны воплотить в жизнь все ваши самые смелые  идеи.</li>
+				</ul>
+			</div>		
+		</div>
+		<div class="other-color__content-bottom">
+				<div class="conteiner">
+					<div class="content-bottom__block">
+						<div class="content-bottom__block_people"></div>
+						<h3>3587</h3>
+						<p>Довольных клиентов</p>
+					</div>
+					<div class="content-bottom__block">
+						<div class="content-bottom__block_lell"></div>
+						<h3>1307</h3>
+						<p>Положительных отзывов</p>
+					</div>
+					<div class="content-bottom__block">
+						<div class="content-bottom__block_heart"></div>
+						<h3>4873</h3>
+						<p>Понравилось с нами работать</p>
+					</div>
+				</div>
+		</div>
+	</section>
+	<section class="other-color" id="contacts">
+		<div class="conteiner">
+			<div class="foter"></div>
+			<div class="content-bottom__block">
+				<ul class="foter_menu">
+					<li>О нас</li>
+					<li>Наша продукция</li>
+					<li>Специалисты</li>
+					<li>Отзывы</li>
+				</ul>
+			</div>
+			<div class="content-bottom__block">
+				<ul class="foter_menu">
+					<li>Как работаем</li>
+					<li>Политика конфиденциальности</li>
+					<li>Цены</li>
+					<li>Доставка</li>
+				</ul>
+			</div>
+			<div class="content-bottom__block">
+				<ul class="foter_menu">
+					<li>Контакты</li>
+					<li>Телефон - 8 985 777 77 00</li>
+					<li>Главный офис - какой-то адрес</li>
+					<li>Наши мастерские</li>
+				</ul>
+			</div>
+
+		</div>
+	</section>
+
+
+</body>
+</html>
