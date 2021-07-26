@@ -1,0 +1,17 @@
+{% extends "template.html" %}
+
+{% block title %}
+Главная
+{% endblock %}
+
+{% block page_content %}
+{% include "blocks/index_block/index_page_block/index_search.html" %}
+{% include "blocks/index_block/index_page_block/index_slider.html" %}
+{% include "blocks/index_block/index_page_block/index_products.html" %}
+{% endblock %}
+
+{% block description %}
+{% include "blocks/index_block/index_description_block/index_brands.html" %}
+{% include "blocks/index_block/index_description_block/index_text.html" %}
+{% include "blocks/index_block/index_description_block/index_info-menu.html" %}
+{% endblock %}

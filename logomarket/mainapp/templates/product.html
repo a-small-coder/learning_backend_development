@@ -1,0 +1,15 @@
+{% extends "template.html" %}
+
+{% block title %}
+{{ product.title }}
+{% endblock %}
+
+{% block page_content %}
+{% include "blocks/product_block/breadcrumbs_product.html" %}
+<section class="product">
+    <h1 class="product__title">BH Fitness F1 G6414V<span>Беговая дорожка </span></h1>
+    {% include "blocks/product_block/product_page_block/product_content.html" %}
+    {% include "blocks/product_block/product_page_block/product_info.html" %}
+    {% include "blocks/product_block/product_page_block/same_products.html" %}
+</section>
+{% endblock %}

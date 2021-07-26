@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+
+{% block title %}
+Оформление
+{% endblock %}
+
+{% block page_content %}
+{% include "blocks/checkout_block/breadcrumbs_checkout.html" %}
+<form action="#" class="checkout">
+	<div class="checkout__title title-checkout">Оформление заказа</div>
+	{% include "blocks/checkout_block/checkout_page_block/checkout_content.html" %}
+	{% include "blocks/checkout_block/checkout_page_block/checkout_order.html" %}
+</form>
+{% endblock %}
