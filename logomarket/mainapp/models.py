@@ -50,9 +50,17 @@ class Category(models.Model):
         return self.name
 
 
+class SubCategoryBall(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Название подкатегории')
+    slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
 
-    MAX_IMAGE_SIZE = 524288
+    #MAX_IMAGE_SIZE = 524288
 
     class Meta:
         abstract = True
@@ -67,11 +75,11 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        image = self.image
-        if image.size > self.MAX_IMAGE_SIZE:
-            raise MaxImageSizeError('Загруженное изображение имеет слишком большой объем')
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     image = self.image
+    #     if image.size > self.MAX_IMAGE_SIZE:
+    #         raise MaxImageSizeError('Загруженное изображение имеет слишком большой объем')
+    #     super().save(*args, **kwargs)
 
 
 class Treadmill(Product):
@@ -84,11 +92,22 @@ class Treadmill(Product):
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
 
-    def get_absolte_url(self):
-        return get_product_url(self, 'product_detail')
+    def get_absolute_url(self):
+        return get_product_url(self, 'product')
+
+
+class SubCategoryBall(models.Model):
+
+    name = models.CharField(max_length=255, verbose_name='Подкатегория для мячей')
+    slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Ball(Product):
+
+    subcategory = models.ForeignKey(SubCategoryBall, verbose_name='Подкатегория', on_delete=models.CASCADE)
     weight = models.CharField(max_length=255, verbose_name='Вес мяча')
     diameter = models.CharField(max_length=255, verbose_name='Диаметр')
     material = models.CharField(max_length=255, verbose_name='Материал камеры')
@@ -96,21 +115,21 @@ class Ball(Product):
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
 
-    def get_absolte_url(self):
-        return get_product_url(self, 'product_detail')
+    def get_absolute_url(self):
+        return get_product_url(self, 'product')
 
 
 class TennisTable(Product):
 
     weight = models.CharField(max_length=255, verbose_name='Вес стола')
     material = models.CharField(max_length=255, verbose_name='Материал столешницы')
-    size = models.CharField(max_length=255, verbose_name='Размеры')
+    size = models.CharField(max_length=255, verbose_name='Размеры упаковки')
 
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
 
-    def get_absolte_url(self):
-        return get_product_url(self, 'product_detail')
+    def get_absolute_url(self):
+        return get_product_url(self, 'product')
 
 
 class CartProduct(models.Model):
