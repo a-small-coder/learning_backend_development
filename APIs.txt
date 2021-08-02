@@ -1,0 +1,99 @@
+# Список категорий (.../api/categories):
+[
+  {
+  "id" = <int>, # хз, зачем id. по-хорошему, функцию уникального идентификатора выполняет slug
+  "name" = <str>,
+  "slug" = <str>
+  },
+  .
+  .
+  .
+]
+
+# Список товаров в категории:
+(.../api/products/treadmills)
+[
+  {
+  "id" = <int>,
+  "category" = <category.name>, # на самом деле хз, нужно ли зачем-то это поле, потому что во всем списке товаров бдет указана одна категория
+  "title" = <str>,
+  "slug" = <str>,
+  "image" = "http://127.0.0.1:8000/media/<product_image>",
+  "description" = <str>, # может быть пустым
+  "price" = <float>
+  "subcategory" = <str>,
+  "weight" = <str>, # на данный момент есть во всех категориях. мб стоит сделать полем в общей модельке
+  "max_weight" = <str>,
+  "max_speed" = <str>,
+  "engine_power" = <str>
+  },
+  .
+  .
+  .
+]
+
+(.../api/products/balls)
+[
+  {
+  "id" = <int>,
+  "category" = <category.name>,
+  "title" = <str>,
+  "slug" = <str>,
+  "image" = "http://127.0.0.1:8000/media/<product_image>",
+  "description" = <str>, #может быть пустым
+  "price" = <float>
+  "subcategory" = <str>,
+  "weight" = <str>,
+  "diameter" = <str>,
+  "material" = <str>
+  },
+  .
+  .
+  .
+]
+
+(.../api/products/tennis_tables)
+[
+  {
+  "id" = <int>,
+  "category" = <category.name>,
+  "title" = <str>,
+  "slug" = <str>,
+  "image" = "http://127.0.0.1:8000/media/<product_image>",
+  "description" = <str>, #может быть пустым
+  "price" = <float>
+  "subcategory" = <str>,
+  "weight" = <str>,
+  "material" = <str>,
+  "size" = <str>
+  },
+  .
+  .
+  .
+]
+
+# товары в корзине
+[
+  "owner" = <str>,
+  "items_count" = <int>,
+  "items": [
+    { # возможно стоит оставить минимальное количество данных, например: category, title, price и slug, с помощью которого можно будет перейти на страницу товара с детальным описанием
+    "id" = <int>,
+    "category" = <category.name>,
+    "title" = <str>,
+    "slug" = <str>,
+    "image" = "http://127.0.0.1:8000/media/<product_image>",
+    "description" = <str>,
+    "price" = <float>
+    "subcategory" = <str>,
+    "weight" = <str>,
+    "max_weight" = <str>,
+    "max_speed" = <str>,
+    "engine_power" = <str>
+    },
+    .
+    .
+    .
+  ] # тут нужна запятая?)
+  "total_price" = <int>
+]
