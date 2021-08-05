@@ -18,10 +18,6 @@ def get_product_url(obj, viewname):
     return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
 
 
-class MaxImageSizeError(Exception):
-    pass
-
-
 class LatestProductsManager:
 
     @staticmethod
@@ -70,9 +66,7 @@ class Product(models.Model):
     class Meta:
         abstract = True
 
-    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE)
-    subcategory = models.ForeignKey(SubCategory, verbose_name='Подкатегория', on_delete=models.SET_NULL, null=True,
-                                    blank=True)
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     image = models.ImageField(verbose_name='Изображение')
@@ -99,6 +93,8 @@ class Treadmill(Product):
 
 class Ball(Product):
 
+    subcategory = models.ForeignKey(SubCategory, verbose_name='Подкатегория', on_delete=models.SET_NULL, null=True,
+                                    blank=True)
     diameter = models.CharField(max_length=255, verbose_name='Диаметр')
     material = models.CharField(max_length=255, verbose_name='Материал камеры')
 
