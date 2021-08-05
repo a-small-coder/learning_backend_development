@@ -56,41 +56,36 @@ class Category(models.Model):
         return self.name
 
 
-class SubCategoryBall(models.Model):
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name='Название подкатегории')
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.name
+        return "{}: {}".format(self.category, self.name)
 
 
 class Product(models.Model):
-
-    #MAX_IMAGE_SIZE = 524288
 
     class Meta:
         abstract = True
 
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, verbose_name='Подкатегория', on_delete=models.SET_NULL, null=True,
+                                    blank=True)
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     image = models.ImageField(verbose_name='Изображение')
     description = models.TextField(verbose_name='Описание', null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
+    weight = models.CharField(max_length=255, verbose_name='Вес')
 
     def __str__(self):
         return self.title
 
-    # def save(self, *args, **kwargs):
-    #     image = self.image
-    #     if image.size > self.MAX_IMAGE_SIZE:
-    #         raise MaxImageSizeError('Загруженное изображение имеет слишком большой объем')
-    #     super().save(*args, **kwargs)
-
 
 class Treadmill(Product):
 
-    weight = models.CharField(max_length=255, verbose_name='Вес дорожки')
     max_weight = models.CharField(max_length=255, verbose_name='Максимальный вес пользователя')
     max_speed = models.CharField(max_length=255, verbose_name='Максимальная скорость')
     engine_power = models.CharField(max_length=255, verbose_name='Мощность двигателя')
@@ -102,24 +97,13 @@ class Treadmill(Product):
         return get_product_url(self, 'product')
 
 
-class SubCategoryBall(models.Model):
-
-    name = models.CharField(max_length=255, verbose_name='Подкатегория для мячей')
-    slug = models.SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Ball(Product):
 
-    subcategory = models.ForeignKey(SubCategoryBall, verbose_name='Подкатегория', on_delete=models.CASCADE)
-    weight = models.CharField(max_length=255, verbose_name='Вес мяча')
     diameter = models.CharField(max_length=255, verbose_name='Диаметр')
     material = models.CharField(max_length=255, verbose_name='Материал камеры')
 
     def __str__(self):
-        return "{}: {}".format(self.category.name, self.title)
+        return "{}: {}".format(self.subcategory.name, self.title)
 
     def get_absolute_url(self):
         return get_product_url(self, 'product')
@@ -127,7 +111,6 @@ class Ball(Product):
 
 class TennisTable(Product):
 
-    weight = models.CharField(max_length=255, verbose_name='Вес стола')
     material = models.CharField(max_length=255, verbose_name='Материал столешницы')
     size = models.CharField(max_length=255, verbose_name='Размеры упаковки')
 
