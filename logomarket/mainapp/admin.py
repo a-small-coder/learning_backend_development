@@ -3,36 +3,22 @@ from django.contrib import admin
 from .models import *
 
 
-class TreadmillAdmin(admin.ModelAdmin):
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='treadmills'))
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
 class BallAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='balls'))
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-class TennisTableAdmin(admin.ModelAdmin):
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='tennis_tables'))
+        if db_field.name == 'subcategory':
+            return ModelChoiceField(SubCategory.objects.filter(category_id=Category.objects.get(slug='balls')))
+            # при создании новых подкатегорий будет запарно прописывать циферки
+            # возможно, имеет смысл запилить словарь с номерами категорий и их названиями
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 admin.site.register(Category)
 admin.site.register(SubCategory)
 
-admin.site.register(Treadmill, TreadmillAdmin)
+admin.site.register(Treadmill)
 admin.site.register(Ball, BallAdmin)
-admin.site.register(TennisTable, TennisTableAdmin)
+admin.site.register(TennisTable)
 
 admin.site.register(CartProduct)
 

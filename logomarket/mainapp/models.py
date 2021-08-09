@@ -70,7 +70,8 @@ class Product(models.Model):
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     image = models.ImageField(verbose_name='Изображение')
-    description = models.TextField(verbose_name='Описание', null=True, blank=True)
+    short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
+    description = models.TextField(verbose_name='Полное описание', null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
     weight = models.CharField(max_length=255, verbose_name='Вес')
 
@@ -78,21 +79,10 @@ class Product(models.Model):
         return self.title
 
 
-class Treadmill(Product):
-
-    max_weight = models.CharField(max_length=255, verbose_name='Максимальный вес пользователя')
-    max_speed = models.CharField(max_length=255, verbose_name='Максимальная скорость')
-    engine_power = models.CharField(max_length=255, verbose_name='Мощность двигателя')
-
-    def __str__(self):
-        return "{}: {}".format(self.category.name, self.title)
-
-    def get_absolute_url(self):
-        return get_product_url(self, 'product')
-
-
 class Ball(Product):
 
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True,
+                                 default=Category.objects.get(slug='balls').pk, editable=False)
     subcategory = models.ForeignKey(SubCategory, verbose_name='Подкатегория', on_delete=models.SET_NULL, null=True,
                                     blank=True)
     diameter = models.CharField(max_length=255, verbose_name='Диаметр')
@@ -107,8 +97,25 @@ class Ball(Product):
 
 class TennisTable(Product):
 
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True,
+                                 default=Category.objects.get(slug='tennis_tables').pk, editable=False)
     material = models.CharField(max_length=255, verbose_name='Материал столешницы')
     size = models.CharField(max_length=255, verbose_name='Размеры упаковки')
+
+    def __str__(self):
+        return "{}: {}".format(self.category.name, self.title)
+
+    def get_absolute_url(self):
+        return get_product_url(self, 'product')
+
+
+class Treadmill(Product):
+
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True,
+                                 default=Category.objects.get(slug='treadmills').pk, editable=False)
+    max_weight = models.CharField(max_length=255, verbose_name='Максимальный вес пользователя')
+    max_speed = models.CharField(max_length=255, verbose_name='Максимальная скорость')
+    engine_power = models.CharField(max_length=255, verbose_name='Мощность двигателя')
 
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
