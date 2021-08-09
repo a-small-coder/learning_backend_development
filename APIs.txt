@@ -1,7 +1,7 @@
 выглядит неплохо, для первого раза
 
 Важно!!! При работе с апи есть несколько моментов:
-1) Большенству объектов потребуется одно представление данных для единственного объекта и другое представление для списка объектов этого типа
+1) Большинству объектов потребуется одно представление данных для единственного объекта и другое представление для списка объектов этого типа
 Например, у товара есть описание и характеристики - на странице товара эта информация необходима, а в каталоге эта будет лишняя информация (достаточно краткого описания)
 Плюс, при получении списка товаров может быть нужна информации о категории товара, а на странице товара нет (не всегда, но бывает)
 2) Представление списка объектов, скорее всего, придется разбивать на части. Например, у нас на сайте 1000 товаров, если апи при запросе будет возвращать все 1000, то сервер и сайт ляжет сразу...
@@ -10,121 +10,126 @@
 
 У нас же есть подкатегории, так их тоже необходимо отразить в апи, иначе как их на сайте рисовать???
 
+
 # Список категорий (.../api/categories):
 [
   {
-    "name" = <str>,
-    "id" = <int>, # хз, зачем id. по-хорошему, функцию уникального идентификатора выполняет slug 
-    // на фронте при генерации нескольки однотипных конструкций необходимо указывать  уникальный ключ, по которому следует обращаться к объекту, 
-    // id - число и работать лучше с ним,  поэтому поле можно оставить, хотя и совсем обязательно
-    "slug" = <str>
-    "subcategories" = [
-      { 
-        "id = <int>,
-        "name" = <str>,
-        "slug" = <str>,
+    "id": <int>,
+    "name": "<str>",
+    "slug": "<str>",
+    "subcategories":
+    [
+      {
+        "id: <int>,
+        "name": "<str>",
+        "slug": "<str>",
       },
       {
         .
+        . # тут остальные подкатегории
         .
-        .
-        }
+      }
     ]
   },
   .
-  .
+  . # тут остальные категории с возможными подкатегориями внутри
   .
 ]
+
 
 # Список товаров в категории:
-(.../api/products/treadmills)
+(.../api/products/<category.name>)
 [
-  {
-  "id" = <int>,
-  "category" = <category.name>, # на самом деле хз, нужно ли зачем-то это поле, потому что во всем списке товаров бдет указана одна категория
-  // для отдельного товара надо, для списка товаров лучше вынести в общий блок информации вне списка
-  "title" = <str>,
-  "slug" = <str>,
-  "image" = "http://127.0.0.1:8000/media/<product_image>",
-  "description" = <str>, # может быть пустым
-  "price" = <float>
-  "subcategory" = <str>,
-  "weight" = <str>, # на данный момент есть во всех категориях. мб стоит сделать полем в общей модельке
-  // возможно
-  "max_weight" = <str>,
-  "max_speed" = <str>,
-  "engine_power" = <str>
-  },
-  .
-  .
-  .
+  "category": <int>,
+  "products":
+  [
+    {
+      "id": <int>,
+      "subcategory_id": <int>, # при наличии.
+      "title": "<str>",
+      "slug": "<str>",
+      "main_image": <img>,
+      "short_description": <text>, # добавил короткое описание для отображения в списке
+      "price": <decimal> # нет тут никакого float'а
+    },
+    .
+    . # тут остальные товары
+    .
+  ]
 ]
 
-(.../api/products/balls)
+
+# подробное описание товара
+(.../api/products/balls/<ball.name>)
 [
-  {
-  "id" = <int>,
-  "category" = <category.name>,
-  "title" = <str>,
-  "slug" = <str>,
-  "image" = "http://127.0.0.1:8000/media/<product_image>",
-  "description" = <str>, #может быть пустым
-  // а не должно - обычно делается либо два описания (одно короткое, для каталога, другое большое для страницы товара) и нужное поле ставится в апи
-  "price" = <float>
-  "subcategory" = <str>,
-  "weight" = <str>,
-  "diameter" = <str>,
-  "material" = <str>
-  },
-  .
-  .
-  .
+  "id": <int>,
+  "category_id": <int>,
+  "subcategory_id": <int>,
+  "title": "<str>",
+  "slug": "<str>",
+  "main_image": <img>,
+  "sub_image_1": <img>,
+  "sub_image_2": <img>,
+  "description": <text>,
+  "price": <decimal>,
+  "weight": "<str>",
+  "diameter": "<str>",
+  "material": "<str>"
 ]
 
-(.../api/products/tennis_tables)
+(.../api/products/tennis_tables/<tennis_table.name>)
 [
-  {
-  "id" = <int>,
-  "category" = <category.name>,
-  "title" = <str>,
-  "slug" = <str>,
-  "image" = "http://127.0.0.1:8000/media/<product_image>",
-  "description" = <str>, #может быть пустым
-  "price" = <float>
-  "subcategory" = <str>,
-  "weight" = <str>,
-  "material" = <str>,
-  "size" = <str>
-  },
-  .
-  .
-  .
+  "id": <int>,
+  "category_id": <int>,
+  "subcategory_id": <int>,
+  "title": "<str>",
+  "slug": "<str>",
+  "main_image": <img>,
+  "sub_image_1": <img>,
+  "sub_image_2": <img>,
+  "description": <text>,
+  "price": <decimal>,
+  "weight": "<str>",
+  "material": "<str>",
+  "size": "<str>"
 ]
+
+(.../api/products/treadmills/<tradmill.name>)
+[
+  "id": <int>,
+  "category_id": <int>,
+  "subcategory_id": <int>,
+  "title": "<str>",
+  "slug": "<str>",
+  "main_image": <img>,
+  "sub_image_1": <img>,
+  "sub_image_2": <img>,
+  "description": <text>,
+  "price": <decimal>,
+  "weight": "<str>",
+  "max_weight": "<str>",
+  "max_speed": "<str>",
+  "engine_power": "<str>"
+]
+
 
 # товары в корзине
 {
-  "owner" = <str>,
-  "items_count" = <int>,
+  "owner": "<str>",
+  "items_count": <int>,
   "items": [
     { # возможно стоит оставить минимальное количество данных, например: category, title, price и slug, с помощью которого можно будет перейти на страницу товара с детальным описанием
-    "id" = <int>,
-    "category" = <category.name>,
-    "title" = <str>,
-    "slug" = <str>,
-    "image" = "http://127.0.0.1:8000/media/<product_image>",
-    "description" = <str>,
-    "price" = <float>
-    "subcategory" = <str>,
-    "weight" = <str>,
-    "max_weight" = <str>,
-    "max_speed" = <str>,
-    "engine_power" = <str>
+      "id": <int>,
+      "category": <category.name>,
+      "title": "<str>",
+      "slug": "<str>",
+      "image": <img>,
+      "short_description": "<str>",
+      "price": <float>,
     },
     .
+    . # тут остальные товары в корзине
     .
-    .
-  ], # тут нужна запятая?) 
-  // да - это объект, причем общие скобки должны быть фигурными
-  // ты же выше зачем-то их ставил)
-  "total_price" = <int>
+  ]
+  "total_price": <int>
 }
