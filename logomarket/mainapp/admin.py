@@ -8,8 +8,6 @@ class BallAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'subcategory':
             return ModelChoiceField(SubCategory.objects.filter(category_id=Category.objects.get(slug='balls')))
-            # при создании новых подкатегорий будет запарно прописывать циферки
-            # возможно, имеет смысл запилить словарь с номерами категорий и их названиями
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 

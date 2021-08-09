@@ -66,10 +66,11 @@ class Product(models.Model):
     class Meta:
         abstract = True
 
-    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
-    image = models.ImageField(verbose_name='Изображение')
+    main_image = models.ImageField(verbose_name='Изображение')
+    sub_image_1 = models.ImageField(verbose_name='Дополнительное изображение', null=True, blank=True)
+    sub_image_2 = models.ImageField(verbose_name='Дополнительное изображение', null=True, blank=True)
     short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
     description = models.TextField(verbose_name='Полное описание', null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
