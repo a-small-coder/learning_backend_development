@@ -3,19 +3,20 @@ from rest_framework import serializers
 from ..models import Category, SubCategory
 
 
-# class SubCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = SubCategory
-#         fields = '__all__'
-
-
 class CategorySerializer(serializers.ModelSerializer):
 
-    #subcategories = SubCategorySerializer(many=True, read_only=True)
-
-    name = serializers.CharField(required=True)
-    slug = serializers.SlugField()
+    subcategories = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
+        fields = ['id', 'name', 'slug', 'subcategories']
+
+    @staticmethod
+    def get_subcategories(obj):
+        return SubCategorySerializer(SubCategory.objects.filter(category=obj), many=True).data
+
+
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
         fields = ['id', 'name', 'slug']
