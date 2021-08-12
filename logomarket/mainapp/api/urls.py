@@ -1,8 +1,10 @@
 from django.urls import path
+from rest_framework import routers
 
-from .api_views import CategoryListAPIView
+from .api_views import CategoryViewSet
 
+router = routers.SimpleRouter()
+router.register('category', CategoryViewSet, basename='category')
 
-urlpatterns = [
-    path('categories/', CategoryListAPIView.as_view(), name='categories'),
-]
+urlpatterns = []
+urlpatterns += router.urls

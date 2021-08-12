@@ -1,10 +1,10 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.viewsets import ModelViewSet
 
 from .serializers import CategorySerializer
-from ..models import Category, SubCategory
+from ..models import Category
 
 
-class CategoryListAPIView(ListAPIView):
+class CategoryViewSet(ModelViewSet):
 
-    serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    serializer_class = CategorySerializer
