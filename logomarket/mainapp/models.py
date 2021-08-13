@@ -1,9 +1,3 @@
-# Плохая практика создавать новую модель подкатегории для каждой категории.
-# И фронту потребуется по одному запросу получить (хотя бы) категорию и все её подкатегории, (в 99% случаях) все категории и все подкатегории
-# Если я захочу добавить 2 категории и 4 подкатегории в каждую - придется лезть в модели, потом в апи, а потом в админку...?? А я очень ленивый)
-# Хорошая практика - создать всего одну модель категорий и одну модель подкатегорий, причем модель подкатегорий должна иметь внешний ключ на категорю к которой принадлежит.
-# Тогда и создание новых списков займет секунды в админке и апи проще будет создавать и лишего кода не будет.
-
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -127,7 +121,6 @@ class Treadmill(Product):
 
 class CartProduct(models.Model):
 
-    user = models.ForeignKey('Customer', verbose_name='Покупатель', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -136,7 +129,11 @@ class CartProduct(models.Model):
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Сумма')
 
     def __str__(self):
-        return "Продукт: {} (для корзины)".format(self.product.title)
+        return "Продукт для корзины: {}".format(self.content_object.title)
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.qty * self.content_object.price
+        super().save(*args, **kwargs)
 
 
 class Cart(models.Model):
@@ -144,7 +141,7 @@ class Cart(models.Model):
     owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', on_delete=models.CASCADE)
     products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
-    total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Сумма')
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
 
     def __str__(self):
         return str(self.id)
