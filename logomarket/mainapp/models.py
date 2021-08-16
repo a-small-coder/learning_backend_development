@@ -7,9 +7,9 @@ from django.urls import reverse
 User = get_user_model()
 
 
-def get_product_url(obj, viewname):
+def get_product_url(obj, view_name):
     ct_model = obj.__class__.meta.model_name
-    return reverse(viewname, kwargs={'ct_model': ct_model, 'slug': obj.slug})
+    return reverse(view_name, kwargs={'ct_model': ct_model, 'slug': obj.slug})
 
 
 class LatestProductsManager:
@@ -126,7 +126,7 @@ class CartProduct(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     qty = models.PositiveIntegerField(default=1, verbose_name='Количество')
-    total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Сумма')
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
 
     def __str__(self):
         return "Продукт для корзины: {}".format(self.content_object.title)
@@ -140,13 +140,14 @@ class Cart(models.Model):
 
     owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
                               on_delete=models.SET_NULL)
-    products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
-    total_products = models.PositiveIntegerField(default=0)
+    products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart',
+                                      verbose_name='Список товаров')
+    total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
     total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
     for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
 
     def __str__(self):
-        return str(self.id)
+        return "Корзина {} ({})".format(self.id, self.owner.user.username)
 
 
 class Customer(models.Model):
