@@ -138,10 +138,12 @@ class CartProduct(models.Model):
 
 class Cart(models.Model):
 
-    owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', on_delete=models.CASCADE)
+    owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
+                              on_delete=models.SET_NULL)
     products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
+    for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
 
     def __str__(self):
         return str(self.id)

@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!y42+1lj3s6dz4%nzb&r)rid)h0)sbuhdb0xunk=^)m4k*tkxm'
 
+#CART_SESSION_ID = 'cart'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'mainapp',
+    #'cart',
 ]
 
 MIDDLEWARE = [
