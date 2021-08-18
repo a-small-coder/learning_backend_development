@@ -126,12 +126,12 @@ class CartProduct(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     qty = models.PositiveIntegerField(default=1, verbose_name='Количество')
-    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
 
     def __str__(self):
         return "Продукт для корзины: {}".format(self.content_object.title)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):    # CartProduct нужно удалять, если qty == 0
         self.total_price = self.qty * self.content_object.price
         super().save(*args, **kwargs)
 
@@ -140,14 +140,28 @@ class Cart(models.Model):
 
     owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
                               on_delete=models.SET_NULL)
-    products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart',
-                                      verbose_name='Список товаров')
+    products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart',     # спорная фигота
+                                      verbose_name='Список товаров')    # с ней легче, но она дублирует функцию
+    # поля Cart в CartProduct (ForeignKey). и вообще это связь не ManyToMany, а OneToMany
     total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
-    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, editable=False, verbose_name='Сумма')
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
     for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
 
     def __str__(self):
         return "Корзина {} ({})".format(self.id, self.owner.user.username)
+
+    def save(self, *args, **kwargs):    # это говнище некорректно работает, если создается или удаляется CartProduct:
+        # в этом случае количество и суммарная стоимость рассчитываются только после второго сохранения в админке((
+        cart_data = self.products.aggregate(models.Sum('total_price'), models.Sum('qty'))
+        if cart_data.get('total_price__sum'):
+            self.total_price = cart_data.get('total_price__sum')
+        else:
+            self.total_price = 0
+        if cart_data.get('qty__sum'):
+            self.total_products = cart_data.get('qty__sum')
+        else:
+            self.total_products = 0     # стоит ли в этом случае удалять корзину?
+        super().save(*args, **kwargs)
 
 
 class Customer(models.Model):
