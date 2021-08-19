@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Category, SubCategory
+from ..models import Category, SubCategory, Cart, CartProduct
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -20,3 +20,26 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
         fields = ['id', 'name', 'slug']
+
+
+class CartSerializer(serializers.ModelSerializer):
+
+    cart_products = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ['id', 'owner', 'total_products', 'total_price', 'for_anonymous_user', 'cart_products']
+
+    @staticmethod
+    def get_cart_products(obj):
+        return CartProductSerializer(CartProduct.objects.filter(cart=obj), many=True).data
+
+
+class CartProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CartProduct
+        fields = ['cart', 'content_type', 'object_id', 'qty', 'total_price']
+
+
+

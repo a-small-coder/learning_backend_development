@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -119,9 +120,37 @@ class Treadmill(Product):
         return get_product_url(self, 'product')
 
 
+class Cart(models.Model):
+
+    owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
+                              on_delete=models.SET_NULL)
+    total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
+    for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
+
+    def __str__(self):
+        return "Корзина {} ({})".format(self.id, self.owner.user.username)
+
+    def save(self, *args, **kwargs):
+        cart_data = CartProduct.objects.filter(cart_id=self.id).aggregate(models.Sum('total_price'), models.Sum('qty'))
+        if cart_data.get('qty__sum'):
+            self.total_products = cart_data.get('qty__sum')
+            if cart_data.get('total_price__sum'):
+                self.total_price = cart_data.get('total_price__sum')
+            else:
+                self.total_price = 0
+            # super().save(*args, **kwargs)
+        else:
+            self.total_products = 0
+            # super().delete(*args, **kwargs)
+            # закомментил, потому что при создании пустой корзины она сразу удаляется.
+            # это нужно запихнуть в другой метод (типа не save, а update)
+        super().save(*args, **kwargs)
+
+
 class CartProduct(models.Model):
 
-    cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
+    cart = models.ForeignKey(Cart, verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -131,37 +160,14 @@ class CartProduct(models.Model):
     def __str__(self):
         return "Продукт для корзины: {}".format(self.content_object.title)
 
-    def save(self, *args, **kwargs):    # CartProduct нужно удалять, если qty == 0
+    def save(self, *args, **kwargs):
+        # в случае, если товар уже есть в корзине,
+        # нужно изменить количество в старой записи, а не создавать новую
         self.total_price = self.qty * self.content_object.price
-        super().save(*args, **kwargs)
-
-
-class Cart(models.Model):
-
-    owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
-                              on_delete=models.SET_NULL)
-    products = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart',     # спорная фигота
-                                      verbose_name='Список товаров')    # с ней легче, но она дублирует функцию
-    # поля Cart в CartProduct (ForeignKey). и вообще это связь не ManyToMany, а OneToMany
-    total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
-    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
-    for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
-
-    def __str__(self):
-        return "Корзина {} ({})".format(self.id, self.owner.user.username)
-
-    def save(self, *args, **kwargs):    # это говнище некорректно работает, если создается или удаляется CartProduct:
-        # в этом случае количество и суммарная стоимость рассчитываются только после второго сохранения в админке((
-        cart_data = self.products.aggregate(models.Sum('total_price'), models.Sum('qty'))
-        if cart_data.get('total_price__sum'):
-            self.total_price = cart_data.get('total_price__sum')
+        if self.qty == 0:
+            super().delete(*args, **kwargs)
         else:
-            self.total_price = 0
-        if cart_data.get('qty__sum'):
-            self.total_products = cart_data.get('qty__sum')
-        else:
-            self.total_products = 0     # стоит ли в этом случае удалять корзину?
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
 
 class Customer(models.Model):
