@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse
-from django.db.models import Q
 
 User = get_user_model()
 
@@ -120,9 +119,18 @@ class Treadmill(Product):
         return get_product_url(self, 'product')
 
 
+class Customer(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20, verbose_name='Номер телефона')
+    address = models.CharField(max_length=255, verbose_name='Адрес')
+
+    def __str__(self):
+        return "Покупатель: {} {}".format(self.user.first_name, self.user.last_name)
+
+
 class Cart(models.Model):
 
-    owner = models.ForeignKey('Customer', verbose_name='Владелец корзины', blank=True, null=True,
+    owner = models.ForeignKey(Customer, verbose_name='Владелец корзины', blank=True, null=True,
                               on_delete=models.SET_NULL)
     total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
     total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
@@ -139,12 +147,8 @@ class Cart(models.Model):
                 self.total_price = cart_data.get('total_price__sum')
             else:
                 self.total_price = 0
-            # super().save(*args, **kwargs)
         else:
             self.total_products = 0
-            # super().delete(*args, **kwargs)
-            # закомментил, потому что при создании пустой корзины она сразу удаляется.
-            # это нужно запихнуть в другой метод (типа не save, а update)
         super().save(*args, **kwargs)
 
 
@@ -161,20 +165,9 @@ class CartProduct(models.Model):
         return "Продукт для корзины: {}".format(self.content_object.title)
 
     def save(self, *args, **kwargs):
-        # в случае, если товар уже есть в корзине,
-        # нужно изменить количество в старой записи, а не создавать новую
         self.total_price = self.qty * self.content_object.price
         if self.qty == 0:
             super().delete(*args, **kwargs)
         else:
             super().save(*args, **kwargs)
 
-
-class Customer(models.Model):
-
-    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
-    phone = models.CharField(max_length=20, verbose_name='Номер телефона')
-    address = models.CharField(max_length=255, verbose_name='Адрес')
-
-    def __str__(self):
-        return "Покупатель: {} {}".format(self.user.first_name, self.user.last_name)
