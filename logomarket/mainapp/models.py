@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.urls import reverse
 
 User = get_user_model()
@@ -63,15 +63,21 @@ class Product(models.Model):
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     main_image = models.ImageField(verbose_name='Изображение')
-    sub_image_1 = models.ImageField(verbose_name='Дополнительное изображение', null=True, blank=True)
-    sub_image_2 = models.ImageField(verbose_name='Дополнительное изображение', null=True, blank=True)
+    sub_images = GenericRelation('imagegallery')
     short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
     description = models.TextField(verbose_name='Полное описание', null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
-    weight = models.CharField(max_length=255, verbose_name='Вес')
 
     def __str__(self):
         return self.title
+
+
+class ImageGallery(models.Model):   # не доделал
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    image = models.ImageField()
 
 
 class Ball(Product):
@@ -82,6 +88,7 @@ class Ball(Product):
                                     blank=True)
     diameter = models.CharField(max_length=255, verbose_name='Диаметр')
     material = models.CharField(max_length=255, verbose_name='Материал камеры')
+    weight = models.CharField(max_length=255, verbose_name='Вес')
 
     def __str__(self):
         return "{}: {}".format(self.subcategory.name, self.title)
@@ -96,6 +103,7 @@ class TennisTable(Product):
                                  default=Category.objects.get(slug='tennis_tables').pk, editable=False)
     material = models.CharField(max_length=255, verbose_name='Материал столешницы')
     size = models.CharField(max_length=255, verbose_name='Размеры упаковки')
+    weight = models.CharField(max_length=255, verbose_name='Вес')
 
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
@@ -111,6 +119,7 @@ class Treadmill(Product):
     max_weight = models.CharField(max_length=255, verbose_name='Максимальный вес пользователя')
     max_speed = models.CharField(max_length=255, verbose_name='Максимальная скорость')
     engine_power = models.CharField(max_length=255, verbose_name='Мощность двигателя')
+    weight = models.CharField(max_length=255, verbose_name='Вес')
 
     def __str__(self):
         return "{}: {}".format(self.category.name, self.title)
@@ -131,7 +140,7 @@ class Customer(models.Model):
 class Cart(models.Model):
 
     owner = models.ForeignKey(Customer, verbose_name='Владелец корзины', blank=True, null=True,
-                              on_delete=models.SET_NULL)
+                              on_delete=models.CASCADE)
     total_products = models.PositiveIntegerField(default=0, verbose_name='Общее количество')
     total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
     for_anonymous_user = models.BooleanField(verbose_name='Анонимный пользователь', default=False)
@@ -171,3 +180,5 @@ class CartProduct(models.Model):
         else:
             super().save(*args, **kwargs)
 
+# возможно, стоит сделать view для того, чтобы лучше осознать, как это все будет работать
+# посмотреть про сессии

@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .serializers import CategorySerializer, CartSerializer
-from ..models import Category, Cart, Product, Ball
+from .serializers import CategorySerializer, CartListSerializer, CartRetrieveSerializer
+from ..models import Category, Cart
 
 
 class CategoryViewSet(ModelViewSet):
@@ -14,5 +14,10 @@ class CategoryViewSet(ModelViewSet):
 class CartViewSet(ModelViewSet):
 
     queryset = Cart.objects.all()
-    serializer_class = CartSerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return CartRetrieveSerializer
+        else:
+            return CartListSerializer
