@@ -63,7 +63,7 @@ class Product(models.Model):
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     main_image = models.ImageField(verbose_name='Изображение')
-    sub_images = GenericRelation('imagegallery')
+    sub_images = GenericRelation('subimage')
     short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
     description = models.TextField(verbose_name='Полное описание', null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
@@ -72,12 +72,15 @@ class Product(models.Model):
         return self.title
 
 
-class ImageGallery(models.Model):   # не доделал
+class SubImage(models.Model):
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     image = models.ImageField()
+
+    def __str__(self):
+        return "Изображение для {} ({})".format(self.content_object.title, self.content_object.category.name)
 
 
 class Ball(Product):
@@ -171,7 +174,7 @@ class CartProduct(models.Model):
     total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0, verbose_name='Сумма')
 
     def __str__(self):
-        return "Продукт для корзины: {}".format(self.content_object.title)
+        return "Продукт для корзины {}: {}".format(self.cart.id, self.content_object.title)
 
     def save(self, *args, **kwargs):
         self.total_price = self.qty * self.content_object.price
@@ -179,6 +182,3 @@ class CartProduct(models.Model):
             super().delete(*args, **kwargs)
         else:
             super().save(*args, **kwargs)
-
-# возможно, стоит сделать view для того, чтобы лучше осознать, как это все будет работать
-# посмотреть про сессии

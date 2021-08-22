@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Category, SubCategory, Cart, CartProduct
+from ..models import *
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,13 +45,38 @@ class CartRetrieveSerializer(serializers.ModelSerializer):
 
 class CartProductSerializer(serializers.ModelSerializer):
 
+    item = serializers.SerializerMethodField()
+
     class Meta:
         model = CartProduct
-        fields = ['content_type', 'object_id', 'qty', 'total_price']
+        fields = ['item', 'qty', 'total_price']
+
+    @staticmethod
+    def get_item(obj):
+        return ProductListSerializer(obj.content_type.model_class().objects.get(id=obj.object_id)).data
 
 
-class Product(serializers.ModelSerializer):
+class ProductListSerializer(serializers.Serializer):
 
-    pass
+    category = serializers.SerializerMethodField()
+    id = serializers.IntegerField()
+    title = serializers.CharField(max_length=255)
+    slug = serializers.SlugField()
+    main_image = serializers.ImageField()
+    short_description = serializers.CharField()
+    price = serializers.DecimalField(max_digits=9, decimal_places=2)
+
+    class Meta:
+        fields = ['category', 'id', 'title', 'slug', 'main_image', 'short_description', 'price']
+        depth = 4
+
+    @staticmethod
+    def get_category(obj):
+        return CategoryForProductListSerializer(Category.objects.get(id=obj.category_id)).data
 
 
+class CategoryForProductListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'

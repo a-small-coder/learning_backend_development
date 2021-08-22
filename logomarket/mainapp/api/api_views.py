@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .serializers import CategorySerializer, CartListSerializer, CartRetrieveSerializer
-from ..models import Category, Cart
+from .serializers import *
+from ..models import Category, Cart, Ball, Treadmill, TennisTable
 
 
 class CategoryViewSet(ModelViewSet):
@@ -21,3 +21,39 @@ class CartViewSet(ModelViewSet):
             return CartRetrieveSerializer
         else:
             return CartListSerializer
+
+
+class BallViewSet(ModelViewSet):
+
+    queryset = Ball.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            pass
+            # return BallRetrieveSerializer
+        else:
+            return ProductListSerializer
+
+
+class TreadmillViewSet(ModelViewSet):
+
+    queryset = Treadmill.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            pass
+            # return TreadmillRetrieveSerializer
+        else:
+            return ProductListSerializer
+
+
+class TennisTableViewSet(ModelViewSet):
+
+    queryset = TennisTable.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            pass
+            # return TennisTableRetrieveSerializer
+        else:
+            return ProductListSerializer
