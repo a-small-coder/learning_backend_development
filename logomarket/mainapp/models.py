@@ -60,6 +60,7 @@ class Product(models.Model):
     class Meta:
         abstract = True
 
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     main_image = models.ImageField(verbose_name='Изображение')

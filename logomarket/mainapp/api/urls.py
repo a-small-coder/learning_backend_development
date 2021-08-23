@@ -6,9 +6,9 @@ from .api_views import CategoryViewSet, CartViewSet, BallViewSet, TreadmillViewS
 router = routers.SimpleRouter()
 router.register('category', CategoryViewSet, basename='category')
 router.register('cart', CartViewSet, basename='cart')
-router.register('ball', BallViewSet, basename='ball')
-router.register('treadmill', TreadmillViewSet, basename='treadmill')
-router.register('tennistable', TennisTableViewSet, basename='tennistable')
+router.register('balls', BallViewSet, basename='balls')
+router.register('treadmills', TreadmillViewSet, basename='treadmills')
+router.register('tennis_tables', TennisTableViewSet, basename='tennis_tables')
 
 urlpatterns = []
 urlpatterns += router.urls

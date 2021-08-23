@@ -68,7 +68,6 @@ class ProductListSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['category', 'id', 'title', 'slug', 'main_image', 'short_description', 'price']
-        depth = 4
 
     @staticmethod
     def get_category(obj):
