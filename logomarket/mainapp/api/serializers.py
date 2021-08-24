@@ -79,3 +79,49 @@ class CategoryForProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class BallRetrieveSerializer(serializers.ModelSerializer):
+
+    sub_images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ball
+        fields = '__all__'
+
+    @staticmethod
+    def get_sub_images(obj):
+        return SubImageSerializer(obj.sub_images.all(), many=True).data
+
+
+class TreadmillRetrieveSerializer(serializers.ModelSerializer):
+
+    sub_images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Treadmill
+        fields = '__all__'
+
+    @staticmethod
+    def get_sub_images(obj):
+        return SubImageSerializer(obj.sub_images.all(), many=True).data
+
+
+class TennisTableRetrieveSerializer(serializers.ModelSerializer):
+
+    sub_images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Treadmill
+        fields = '__all__'
+
+    @staticmethod
+    def get_sub_images(obj):
+        return SubImageSerializer(obj.sub_images.all(), many=True).data
+
+
+class SubImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubImage
+        fields = ['image']

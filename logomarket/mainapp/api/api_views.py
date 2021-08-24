@@ -28,7 +28,7 @@ class ProductPagination(PageNumberPagination):
 
     page_size = 5
     page_query_param = 'page_size'
-    max_page_size = 10    # что она делает???
+    max_page_size = 10
 
 
 class BallViewSet(ModelViewSet):
@@ -38,8 +38,7 @@ class BallViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            pass
-            # return BallRetrieveSerializer
+            return BallRetrieveSerializer
         else:
             return ProductListSerializer
 
@@ -47,11 +46,11 @@ class BallViewSet(ModelViewSet):
 class TreadmillViewSet(ModelViewSet):
 
     queryset = Treadmill.objects.all()
+    pagination_class = ProductPagination
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            pass
-            # return TreadmillRetrieveSerializer
+            return TreadmillRetrieveSerializer
         else:
             return ProductListSerializer
 
@@ -59,10 +58,10 @@ class TreadmillViewSet(ModelViewSet):
 class TennisTableViewSet(ModelViewSet):
 
     queryset = TennisTable.objects.all()
+    pagination_class = ProductPagination
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            pass
-            # return TennisTableRetrieveSerializer
+            return TennisTableRetrieveSerializer
         else:
             return ProductListSerializer
