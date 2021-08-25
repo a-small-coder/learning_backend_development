@@ -1,7 +1,10 @@
 from django.urls import path
 from rest_framework import routers
 
-from .api_views import CategoryViewSet, CartViewSet, BallViewSet, TreadmillViewSet, TennisTableViewSet
+from .main.api_views import CategoryViewSet
+from .cart.api_views import CartViewSet
+from .product.api_views import BallViewSet, TreadmillViewSet, TennisTableViewSet
+
 
 router = routers.SimpleRouter()
 router.register('category', CategoryViewSet, basename='category')

@@ -2,26 +2,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
 
 from .serializers import *
-from ..models import Category, Cart, Ball, Treadmill, TennisTable
-
-
-class CategoryViewSet(ModelViewSet):
-
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    lookup_field = 'slug'
-
-
-class CartViewSet(ModelViewSet):
-
-    queryset = Cart.objects.all()
-    lookup_field = 'id'
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return CartRetrieveSerializer
-        else:
-            return CartListSerializer
 
 
 class ProductPagination(PageNumberPagination):
